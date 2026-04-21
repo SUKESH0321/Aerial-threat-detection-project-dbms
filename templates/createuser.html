@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>System Login - Threat Detection</title>
+    <title>Create User - Threat Detection</title>
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -52,6 +52,7 @@
                 8px 8px 0px rgba(0, 0, 0, 0.7);
             padding: 32px;
             text-align: center;
+            position: relative;
         }
 
         h1 {
@@ -94,7 +95,6 @@
             appearance: none;
         }
 
-        /* Fake arrow for select */
         .select-wrapper {
             position: relative;
         }
@@ -178,17 +178,28 @@
           {% endif %}
         {% endwith %}
 
-        <div class="pixel-panel" style="position: relative;">
-            <h1>AUTHENTICATION</h1>
-            <h2>> ENTER CREDENTIALS <span class="cursor"></span></h2>
-            <form method="POST" action="/defencepage/login">
+        <div class="pixel-panel">
+            <h1>NEW OPERATIVE</h1>
+            <h2>> INITIALIZE PROFILE <span class="cursor"></span></h2>
+            <form method="POST" action="/defencepage/login/createuser">
                 <input type="text" name="username" placeholder="OPERATIVE ID" required>
                 <input type="password" name="password" placeholder="PASSCODE" required>
                 
-                <button type="submit">AUTHORIZE ACCESS</button>
+                <div class="select-wrapper">
+                    <select name="role" required>
+                        <option value="" disabled selected>SELECT CLEARANCE LEVEL</option>
+                        <option value="analyst">ANALYST [L1]</option>
+                        <option value="commander">COMMANDER [L2]</option>
+                        <option value="general">GENERAL [L3]</option>
+                    </select>
+                </div>
+
+                <input type="password" name="access_key" placeholder="SECURE ACCESS KEY" required>
+                
+                <button type="submit">CREATE PROFILE</button>
             </form>
             <div style="position: absolute; bottom: 10px; right: 10px;">
-                <a href="/defencepage/login/createuser" style="color: var(--terminal-green); text-decoration: none; font-size: 14px; border-bottom: 1px dashed;">CREATE USER</a>
+                <a href="/defencepage/login" style="color: var(--warn-orange); text-decoration: none; font-size: 14px; border-bottom: 1px dashed;">RETURN</a>
             </div>
         </div>
     </div>

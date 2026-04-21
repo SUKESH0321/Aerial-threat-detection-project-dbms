@@ -1,4 +1,11 @@
 -- Tables
+CREATE TABLE IF NOT EXISTS Users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS Aerial_Objects (
     object_id INTEGER PRIMARY KEY AUTOINCREMENT,
     type TEXT,

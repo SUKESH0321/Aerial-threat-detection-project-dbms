@@ -20,11 +20,65 @@ def intro():
 @app.route("/defencepage/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        rank = request.form.get("rank")
-        if rank:
-            session["role"] = rank
-        return redirect("/defencepage")
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        conn = get_conn()
+        cur = conn.cursor()
+        
+        cur.execute('''CREATE TABLE IF NOT EXISTS Users (
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )''')
+        
+        user = cur.execute("SELECT role FROM Users WHERE username = ? AND password = ?", (username, password)).fetchone()
+        conn.close()
+
+        if user:
+            session["role"] = user[0]
+            return redirect("/defencepage")
+        else:
+            flash("ACCESS DENIED: Invalid Credentials or Unregistered Profile.")
+            return redirect("/defencepage/login")
+
     return render_template("login.html")
+
+@app.route("/defencepage/login/createuser", methods=["GET", "POST"])
+def createuser():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        role = request.form.get("role")
+        access_key = request.form.get("access_key")
+
+        if access_key != "maverick21":
+            flash("ACCESS DENIED: Invalid Secure Access Key.")
+            return redirect("/defencepage/login/createuser")
+
+        conn = get_conn()
+        cur = conn.cursor()
+        
+        cur.execute('''CREATE TABLE IF NOT EXISTS Users (
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )''')
+
+        try:
+            cur.execute("INSERT INTO Users (username, password, role) VALUES (?, ?, ?)", (username, password, role))
+            conn.commit()
+            flash("Profile initialized securely. Proceed to authentication.")
+            return redirect("/defencepage/login")
+        except sqlite3.IntegrityError:
+            flash("PROFILE ERROR: Operative ID currently active.")
+            return redirect("/defencepage/login/createuser")
+        finally:
+            conn.close()
+
+    return render_template("createuser.html")
 @app.route("/defencepage")
 def index():
     if "role" not in session:
