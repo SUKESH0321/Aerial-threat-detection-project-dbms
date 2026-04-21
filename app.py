@@ -33,11 +33,12 @@ def login():
             role TEXT NOT NULL
         )''')
         
-        user = cur.execute("SELECT role FROM Users WHERE username = ? AND password = ?", (username, password)).fetchone()
+        user = cur.execute("SELECT role, username FROM Users WHERE username = ? AND password = ?", (username, password)).fetchone()
         conn.close()
 
         if user:
             session["role"] = user[0]
+            session["username"] = user[1]
             return redirect("/defencepage")
         else:
             flash("ACCESS DENIED: Invalid Credentials or Unregistered Profile.")
