@@ -184,6 +184,14 @@
             <form method="POST" action="/defencepage/login">
                 <input type="text" name="username" placeholder="OPERATIVE ID" required>
                 <input type="password" name="password" placeholder="PASSCODE" required>
+                <div class="select-wrapper">
+                    <select name="rank" required>
+                        <option value="" disabled selected>SELECT CLEARANCE</option>
+                        <option value="analyst">ANALYST</option>
+                        <option value="commander">COMMANDER</option>
+                        <option value="general">GENERAL</option>
+                    </select>
+                </div>
                 
                 <button type="submit">AUTHORIZE ACCESS</button>
             </form>
